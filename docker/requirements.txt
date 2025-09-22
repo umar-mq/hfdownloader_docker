@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+redis
+rq
+huggingface_hub[cli,hf_transfer]
+hf_transfer
+python-jose[cryptography]
+jinja2
+python-multipart

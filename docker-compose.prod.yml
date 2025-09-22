@@ -1,0 +1,66 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    command: ["redis-server","--appendonly","yes"]
+
+  backend:
+    build: ./docker
+    image: ghcr.io/umar-mq/hf-downloader:latest
+    depends_on: [redis]
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - HF_HUB_ENABLE_HF_TRANSFER=1
+      - REDIS_URL=redis://redis:6379/0
+      - MODEL_DIR=/models
+      - DATA_DIR=/data
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - /mnt/zepetabyte/aimodels:/models
+      - backend-data:/data
+    restart: unless-stopped
+    networks:
+      - appnet
+
+  worker:
+    build: ./docker
+    command: ["python","/app/worker/worker.py"]
+    depends_on: [redis, backend]
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - HF_HUB_ENABLE_HF_TRANSFER=1
+      - REDIS_URL=redis://redis:6379/0
+      - MODEL_DIR=/models
+      - DATA_DIR=/data
+    volumes:
+      - /mnt/zepetabyte/aimodels:/models
+      - backend-data:/data
+    restart: unless-stopped
+    networks:
+      - appnet
+    deploy:
+      replicas: 2
+
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./webui/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - appnet
+
+volumes:
+  redis-data:
+  backend-data:
+
+networks:
+  appnet:
+    driver: bridge

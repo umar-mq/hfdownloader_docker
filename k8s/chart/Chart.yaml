@@ -1,0 +1,4 @@
+apiVersion: v2
+name: hf-downloader
+description: HF Downloader for TrueNAS SCALE
+version: 0.1.0
