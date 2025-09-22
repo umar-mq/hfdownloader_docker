@@ -4,25 +4,29 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential git curl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
+# Copy Python requirements and install dependencies
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Copy backend & worker code
+COPY backend /app/backend
+COPY worker /app/worker
 
 # Install Node.js for building the web UI
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs
 
-# Copy web UI source
+# Copy web UI source and build it
 COPY webui /app/webui
 
 # Build web UI
 WORKDIR /app/webui
 RUN npm install && npm run build
 
-# Copy backend & worker code
+# Copy built web UI to the correct location
 WORKDIR /app
-COPY backend /app/backend
-COPY worker /app/worker
-COPY webui/dist /app/webui_dist
+RUN cp -r /app/webui/dist /app/webui_dist
 
 # non-root user
 RUN useradd -u 1000 -m appuser || true
