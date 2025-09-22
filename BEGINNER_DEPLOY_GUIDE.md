@@ -48,68 +48,21 @@ Before you begin, you'll need:
 
 ## Step 3: Deploy Using the Apps Interface
 
-### 3.1 Access the Apps Catalog
-1. In the TrueNAS web interface, go to **Apps > Discover Apps**
-2. Click **Manage Catalogs**
-3. Click **Add Catalog**
-4. Fill in the details:
-   - **Name**: `hf-downloader`
-   - **Repository**: `https://github.com/umar-mq/hf_downloader_truenas_prod`
-   - **Branch**: `main`
-5. Click **Save**
-6. Wait for the catalog to sync
-
-### 3.2 Install the Application
-1. Go back to **Apps > Discover Apps**
-2. Find **HF Downloader** in the list (you may need to refresh)
-3. Click on it, then click **Install**
-4. Configure the application:
-   - **Application Name**: `hf-downloader`
-   - **Version**: Select the latest version
-
-### 3.3 Configure Application Settings
-In the configuration screen, you'll need to set several values:
-
-#### Workload Details:
-- **Storage Class**: Select your preferred storage class (usually "default")
-
-#### Container Images:
-- **Image Repository**: `ghcr.io/umar-mq/hf-downloader`
-- **Image Tag**: `latest`
-
-#### Configuration:
-- **Hugging Face Token**: Paste your Hugging Face token from Step 2.1
-- **JWT Secret**: Paste your JWT secret from Step 2.2
-- **Model Storage Path**: `/mnt/{your-pool-name}/hf-models` (replace `{your-pool-name}` with your actual pool name)
-
-#### Resource Limits (optional but recommended):
-- **CPU Limit**: 2
-- **Memory Limit**: 4Gi
-
-### 3.4 Deploy the Application
-1. Click **Save** at the bottom of the configuration screen
-2. Wait for the deployment to complete (this may take 5-10 minutes)
-3. The status will change from "Deploying" to "Active" when complete
-
-## Step 4: Alternative Method - Deploy Using Custom App
-
-If the Apps catalog method doesn't work, you can deploy using the Custom App feature:
-
-### 4.1 Prepare the docker-compose File
+### 3.1 Prepare the docker-compose File
 1. Download the `docker-compose.prod.yml` file from the repository
 2. Edit it to match your system:
    - Replace `/mnt/{pool}/hf-models` with your actual dataset path
    - You'll add secrets through the TrueNAS interface later
 
-### 4.2 Deploy via Custom App
+### 3.2 Deploy via Custom App
 1. In TrueNAS, go to **Apps > Custom App**
 2. Click **Install via YAML**
 3. Paste the contents of your edited `docker-compose.prod.yml` file
 4. Click **Install**
 
-## Step 5: Configure Secrets
+## Step 4: Configure Secrets
 
-### 5.1 Add Secrets in TrueNAS
+### 4.1 Add Secrets in TrueNAS
 1. Go to **Apps > Installed Applications**
 2. Find your HF Downloader application
 3. Click the **Edit** button (pencil icon)
@@ -119,15 +72,15 @@ If the Apps catalog method doesn't work, you can deploy using the Custom App fea
    - **JWT_SECRET**: Your generated JWT secret
 6. Click **Save**
 
-## Step 6: Access the Application
+## Step 5: Access the Application
 
-### 6.1 Find the Application URL
+### 5.1 Find the Application URL
 1. Go to **Apps > Installed Applications**
 2. Find your HF Downloader application
 3. Look for the **Application URL** in the details
 4. It will typically be something like `http://[your-truenas-ip]:8080`
 
-### 6.2 Generate a User Token
+### 5.2 Generate a User Token
 1. Open the application URL in your web browser
 2. You'll need to generate a JWT token for authentication:
    - Open a terminal or command prompt
@@ -139,14 +92,14 @@ If the Apps catalog method doesn't work, you can deploy using the Custom App fea
      ```
    - This will return a token that you can use in the WebUI
 
-### 6.3 Use the WebUI
+### 5.3 Use the WebUI
 1. Open the application URL in your browser
 2. Enter your JWT token in the token field
 3. Start downloading models by entering model IDs
 
-## Step 7: Managing Downloads
+## Step 6: Managing Downloads
 
-### 7.1 Start a Download
+### 6.1 Start a Download
 1. In the WebUI, enter a model ID (e.g., `facebook/opt-125m`)
 2. Select repository type if needed (usually "Model")
 3. Choose download options:
@@ -155,12 +108,12 @@ If the Apps catalog method doesn't work, you can deploy using the Custom App fea
    - **Select Files**: Download specific files only
 4. Click **Start Download**
 
-### 7.2 Monitor Progress
+### 6.2 Monitor Progress
 1. The **Download Jobs** section shows all active downloads
 2. You can see progress, speed, and estimated time remaining
 3. Use the action buttons to pause, resume, or cancel downloads
 
-### 7.3 Access Downloaded Models
+### 6.3 Access Downloaded Models
 1. Your downloaded models are stored in the dataset you created
 2. Access them via **Storage > Datasets** in TrueNAS
 3. Or access them directly via the filesystem at `/mnt/{pool}/hf-models`
@@ -199,8 +152,8 @@ If the Apps catalog method doesn't work, you can deploy using the Custom App fea
 1. Go to **Apps > Installed Applications**
 2. Find your HF Downloader application
 3. Click the **Update** button
-4. Select the new version
-5. Review and confirm the configuration
+4. If using the default image, it will automatically pull the latest version
+5. If using a specific tag, update the image tag in the configuration
 6. Click **Save**
 
 ## Advanced Configuration

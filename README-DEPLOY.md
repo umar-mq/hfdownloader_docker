@@ -47,6 +47,13 @@ Beginner's Deployment Guide
 ---------------------------
 For users new to TrueNAS SCALE deployment, see [BEGINNER_DEPLOY_GUIDE.md](BEGINNER_DEPLOY_GUIDE.md) for detailed step-by-step instructions.
 
+GitHub Actions Workflow
+-----------------------
+This repository includes a GitHub Actions workflow that automatically builds and pushes Docker images to GHCR:
+- Workflow file: `.github/workflows/docker-build.yml`
+- Images are pushed to: `ghcr.io/{username}/hf_downloader_truenas_prod`
+- Tags are created based on git references and semver tags
+
 Operational notes
 -----------------
 - Logs are written to /data/logs in container (mapped to backend-data in compose).

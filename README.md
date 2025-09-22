@@ -66,6 +66,18 @@ See our [Complete Beginner's Guide to Deploying HF Downloader on TrueNAS](BEGINN
    docker-compose -f docker-compose.prod.yml up -d
    ```
 
+## GitHub Actions Workflow
+
+This repository includes a GitHub Actions workflow that automatically builds and pushes Docker images to GHCR:
+- Workflow file: `.github/workflows/docker-build.yml`
+- Images are pushed to: `ghcr.io/{username}/hf_downloader_truenas_prod`
+- Tags are created based on git references and semver tags
+
+To use this workflow:
+1. Fork this repository
+2. Enable GitHub Actions in your fork
+3. The workflow will automatically trigger on pushes to the main branch and tags
+
 ## Usage
 
 1. Access the WebUI at `http://localhost:8080`
